@@ -39,13 +39,26 @@ export async function GET(req: NextRequest) {
         const user = json?.data ?? json?.user ?? json
 
         if (user && (user.username || user.user_name)) {
+          const rawPic =
+            user.profile_pic_url_hd ??
+            user.profile_pic_url ??
+            user.profile_image ??
+            user.profile_pic ??
+            user.avatar ??
+            user.pic ??
+            ''
+
+          const profile_pic_url = rawPic
+            ? `/api/proxy-image?url=${encodeURIComponent(rawPic)}`
+            : ''
+
           return NextResponse.json({
             profile: {
               username: user.username ?? user.user_name ?? username,
               full_name: user.full_name ?? user.fullname ?? '',
               followers_count: user.followers ?? user.follower_count ?? user.edge_followed_by?.count ?? 0,
               following_count: user.following ?? user.following_count ?? user.edge_follow?.count ?? 0,
-              profile_pic_url: user.profile_pic_url_hd ?? user.profile_pic_url ?? user.profile_image ?? '',
+              profile_pic_url,
               is_verified: user.is_verified ?? user.verified ?? false,
               biography: user.biography ?? user.bio ?? '',
               external_url: user.external_url ?? null,
