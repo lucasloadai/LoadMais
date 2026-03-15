@@ -43,5 +43,9 @@ export function useInstagram() {
     return { profile: result.profile, score }
   }, [])
 
-  return { ...state, verify }
+  const reset = useCallback(() => {
+    setState({ loading: false, error: null, profile: null, score: null })
+  }, [])
+
+  return { ...state, verify, reset }
 }

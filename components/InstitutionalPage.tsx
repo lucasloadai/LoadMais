@@ -1,13 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { trackEvent } from '@/utils/tracking'
 
 const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5511999999999'
-const WA_MESSAGE = encodeURIComponent(
-  'Olá! Vim pelo site da LOAD MAIS e quero saber mais sobre como estruturar o crescimento da minha empresa.'
-)
-const WA_URL = `https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`
 
 const results = [
   { metric: '3x', label: 'mais leads qualificados' },
@@ -35,6 +32,17 @@ const pillars = [
 ]
 
 export function InstitutionalPage() {
+  const searchParams = useSearchParams()
+  const nome = searchParams.get('nome')
+  const firstName = nome ? nome.split(' ')[0] : null
+
+  const WA_MESSAGE = encodeURIComponent(
+    nome
+      ? `Olá! Sou ${nome}, vim pelo site da LOAD MAIS e quero saber mais sobre como estruturar o crescimento da minha empresa.`
+      : 'Olá! Vim pelo site da LOAD MAIS e quero saber mais sobre como estruturar o crescimento da minha empresa.'
+  )
+  const WA_URL = `https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`
+
   useEffect(() => {
     trackEvent('LeadCaptured')
   }, [])
@@ -57,18 +65,35 @@ export function InstitutionalPage() {
             LOAD MAIS — Marketing que é Engenharia
           </span>
 
+          {firstName && (
+            <p className="text-white/70 text-lg font-medium mb-3">
+              {firstName}, seu perfil foi analisado.
+            </p>
+          )}
+
           <h1 className="text-4xl md:text-6xl font-black text-white leading-tight mb-6">
-            Marketing não precisa ser{' '}
-            <span className="text-gradient">tentativa</span>.
-            <br />
-            Pode ser{' '}
-            <span className="text-gradient">engenharia</span>.
+            {firstName ? (
+              <>
+                Agora é hora de{' '}
+                <span className="text-gradient">transformar</span>
+                <br />
+                presença em <span className="text-gradient">resultado</span>.
+              </>
+            ) : (
+              <>
+                Marketing não precisa ser{' '}
+                <span className="text-gradient">tentativa</span>.
+                <br />
+                Pode ser{' '}
+                <span className="text-gradient">engenharia</span>.
+              </>
+            )}
           </h1>
 
           <p className="text-white/70 text-xl mb-10 max-w-2xl mx-auto">
-            Estamos estruturando empresas com IA, automação e inteligência
-            humana. Chega de impulsionar post e torcer. Hora de construir
-            máquinas de crescimento.
+            {firstName
+              ? `Estamos prontos para montar uma estratégia real para você, ${firstName}. IA, automação e inteligência humana trabalhando juntos.`
+              : 'Estamos estruturando empresas com IA, automação e inteligência humana. Chega de impulsionar post e torcer. Hora de construir máquinas de crescimento.'}
           </p>
 
           <button
@@ -79,7 +104,7 @@ export function InstitutionalPage() {
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
               <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.524 5.845L.057 23.998l6.306-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.371l-.36-.214-3.733.979 1-3.642-.234-.373A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.429-4.39 9.818-9.818 9.818z" />
             </svg>
-            Falar com especialista agora
+            {firstName ? `Falar com especialista, ${firstName}` : 'Falar com especialista agora'}
           </button>
 
           <p className="text-white/40 text-sm mt-4">
@@ -125,8 +150,17 @@ export function InstitutionalPage() {
       <section className="px-4 py-20 text-center">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Pronto para parar de tentar e começar a{' '}
-            <span className="text-gradient">crescer de verdade</span>?
+            {firstName ? (
+              <>
+                {firstName}, pronto para parar de tentar e começar a{' '}
+                <span className="text-gradient">crescer de verdade</span>?
+              </>
+            ) : (
+              <>
+                Pronto para parar de tentar e começar a{' '}
+                <span className="text-gradient">crescer de verdade</span>?
+              </>
+            )}
           </h2>
           <p className="text-white/60 mb-8">
             Nosso time vai analisar seu negócio e montar uma estratégia
