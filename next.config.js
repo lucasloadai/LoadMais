@@ -16,6 +16,23 @@ const nextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://www.googletagmanager.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: https://*.cdninstagram.com https://www.facebook.com",
+              "connect-src 'self' https://*.supabase.co https://www.instagram.com",
+              "frame-src https://www.googletagmanager.com",
+              "frame-ancestors 'none'",
+            ].join('; '),
+          },
         ],
       },
     ]

@@ -1,6 +1,7 @@
 export function PixelScript() {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
-  if (!pixelId) return null
+  // Aceita apenas IDs numéricos (formato padrão do Meta Pixel)
+  if (!pixelId || !/^\d+$/.test(pixelId)) return null
 
   return (
     <>

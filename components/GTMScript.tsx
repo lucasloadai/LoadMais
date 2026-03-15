@@ -1,6 +1,7 @@
 export function GTMScript() {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
-  if (!gtmId) return null
+  // Aceita apenas IDs no formato GTM-XXXXXXX
+  if (!gtmId || !/^GTM-[A-Z0-9]+$/.test(gtmId)) return null
 
   return (
     <>
