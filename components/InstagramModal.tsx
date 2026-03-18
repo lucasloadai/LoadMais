@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useInstagram } from '@/hooks/useInstagram'
 import { formatCount } from '@/lib/instagramCheck'
 import { trackEvent } from '@/utils/tracking'
@@ -24,7 +23,6 @@ export function InstagramModal({
   onClose,
   extractCleanPhone,
 }: Props) {
-  const router = useRouter()
   const [instagram, setInstagram] = useState('')
   const [saving, setSaving] = useState(false)
   const [avatarError, setAvatarError] = useState(false)
@@ -66,8 +64,7 @@ export function InstagramModal({
     }
 
     trackEvent('LeadCaptured', { tier: score.tier, score: score.score, ddd })
-    trackEvent('RedirectAgent')
-    router.push(`/institutional?nome=${encodeURIComponent(formData.nome)}`)
+    onClose()
   }
 
   function handleSkip() {
@@ -88,8 +85,7 @@ export function InstagramModal({
     }).catch(() => {})
 
     trackEvent('LeadCaptured', { ddd, tier: 'curioso' })
-    trackEvent('RedirectAgent')
-    router.push(`/institutional?nome=${encodeURIComponent(formData.nome)}`)
+    onClose()
   }
 
   const firstName = formData.nome.split(' ')[0]

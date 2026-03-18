@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef, useLayoutEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { DDDMessage } from './DDDMessage'
 import { ProgressBar } from './ProgressBar'
@@ -22,6 +23,28 @@ export function FormLead({ form, dddMessage, handlePhoneChange, onSubmit }: Prop
   const nome = watch('nome')
   const whatsapp = watch('whatsapp')
   const progress = [nome?.length >= 2, whatsapp?.replace(/\D/g, '').length >= 10].filter(Boolean).length
+
+  // Preserva posição do cursor no input mascarado
+  const phoneRef = useRef<HTMLInputElement>(null)
+  const savedCursor = useRef<{ pos: number; oldLen: number } | null>(null)
+
+  useLayoutEffect(() => {
+    if (savedCursor.current !== null && phoneRef.current) {
+      const { pos, oldLen } = savedCursor.current
+      const diff = phoneRef.current.value.length - oldLen
+      const newPos = Math.max(0, pos + diff)
+      phoneRef.current.setSelectionRange(newPos, newPos)
+      savedCursor.current = null
+    }
+  })
+
+  const onPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    savedCursor.current = {
+      pos: e.target.selectionStart ?? e.target.value.length,
+      oldLen: e.target.value.length,
+    }
+    handlePhoneChange(e)
+  }
 
   return (
     <form
@@ -53,9 +76,10 @@ export function FormLead({ form, dddMessage, handlePhoneChange, onSubmit }: Prop
           Seu WhatsApp
         </label>
         <input
+          ref={phoneRef}
           type="tel"
           value={watch('whatsapp')}
-          onChange={handlePhoneChange}
+          onChange={onPhoneChange}
           placeholder="(11) 99999-9999"
           autoComplete="tel"
           inputMode="numeric"
@@ -75,7 +99,7 @@ export function FormLead({ form, dddMessage, handlePhoneChange, onSubmit }: Prop
         disabled={!isValid}
         className="w-full bg-gradient-brand text-white font-bold py-4 rounded-xl text-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100 glow-orange"
       >
-        Quero crescer minha empresa →
+        Quero garantir minha análise →
       </button>
 
       <p className="text-center text-white/40 text-xs">
